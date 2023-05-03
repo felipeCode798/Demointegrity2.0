@@ -183,10 +183,14 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
             data = list(data.values())
 
             resultado = await analisis_endpoint(data)
+            print(resultado)
+            results = {}
+            results['filename'] = document.filename
+            results['resultado'] = resultado
         
-        resultados.append(resultado)
+        resultados.append(results)
 
-    return resultado
+    return resultados
 
 #---------------------------------------------------------------------------------#
 #--------------- Analisis  -------------------------------------------------------#
