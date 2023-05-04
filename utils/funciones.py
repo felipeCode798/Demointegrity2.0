@@ -182,7 +182,13 @@ def detect_manipulation(image_path):
     percent_manipulated = 100 * num_manipulated_pixels / total_pixels
 
     # Devuelve True si la imagen ha sido manipulada, False en caso contrario
-    return percent_manipulated > 0.1
+
+    if percent_manipulated > 0.1:
+        return 1
+    else:
+        return 0
+
+    # return percent_manipulated > 0.1
 
 # Funcion con la metodologia de Laplaciano (Analisis de manipulacion de patrones)
 def detect_manipulation_pattern(image_path):

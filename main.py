@@ -77,7 +77,7 @@ Keyword arguments: name, phone, dni, file
 argument -- devuelve el resultado del analisis de un documento
 Return: resultado
 """
-@app.post("/uploadfile/")
+@app.post("/uploadfile/{name}/{phone}/{dni}")
 async def create_upload_file(name: str, phone: int, dni: int, files: List[UploadFile] = File(...)):
 
     now = datetime.now()
@@ -103,16 +103,17 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
 
         if extension != 'pdf':
             tipo = 'img'
+            print('Analizando imagen: ' + filename)
 
             # Analizar la imagen utilizando diferentes técnicas.
             results = {}
             results['tipo'] = tipo
             results['manipulation'] = funciones.detect_manipulation(ruta)
-            results['manipulation_pattern'] = funciones.detect_manipulation_pattern(ruta)
-            results['noise'] = funciones.detect_noise(ruta)
-            results['metadata'] = funciones.detect_metadata(ruta)
-            results['compression'] = funciones.detect_compression(ruta)
-            results['brightness'] = funciones.analyze_brightness(ruta)
+            #results['manipulation_pattern'] = funciones.detect_manipulation_pattern(ruta)
+            #results['noise'] = funciones.detect_noise(ruta)
+            #results['metadata'] = funciones.detect_metadata(ruta)
+            #results['compression'] = funciones.detect_compression(ruta)
+            #results['brightness'] = funciones.analyze_brightness(ruta)
         else:
             pdfReader = PyPDF2.PdfReader(open(ruta, 'rb'))
             info = pdfReader.metadata
@@ -183,7 +184,7 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
             data = list(data.values())
 
             resultado = await analisis_endpoint(data)
-            print(resultado)
+
             results = {}
             results['filename'] = document.filename
             results['resultado'] = resultado
