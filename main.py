@@ -108,6 +108,7 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
             # Analizar la imagen utilizando diferentes técnicas.
             results = {}
             results['tipo'] = tipo
+            results['filename'] = document.filename
             results['manipulation'] = funciones.detect_manipulation(ruta)
             #results['manipulation_pattern'] = funciones.detect_manipulation_pattern(ruta)
             #results['noise'] = funciones.detect_noise(ruta)
