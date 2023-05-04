@@ -103,8 +103,7 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
 
         if extension != 'pdf':
             tipo = 'img'
-            print('Analizando imagen: ' + filename)
-
+            
             # Analizar la imagen utilizando diferentes técnicas.
             results = {}
             results['tipo'] = tipo
