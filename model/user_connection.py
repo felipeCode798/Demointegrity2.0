@@ -112,7 +112,7 @@ class UserConnection():
 
     def update_documents(self, data):
         with self.db.cursor() as cur:
-            cur.execute("UPDATE documents SET creator = %(creator)s, autor = %(autor)s, producer = %(produccer)s, title = %(title)s, creationdate = %(creation_date)s, lastdate = %(last_date)s WHERE id_document = %(id_document)s", data)
+            cur.execute("UPDATE documents SET creator = %(creator)s, autor = %(autor)s, producer = %(produccer)s, title = %(title)s WHERE id_document = %(id_document)s", data)
             self.db.commit()
 
     

@@ -197,9 +197,9 @@ def detect_manipulation(image_path):
         percent_manipulated = 83.63
 
     if percent_manipulated >= 85.00:
-        return 'La imagen probablemente ha sido Manipulada'
-    else:
         return 'La imagen probablemente no ha sido Manipulada'
+    else:
+        return 'La imagen probablemente ha sido Manipulada'
 
     # return percent_manipulated > 0.1
 

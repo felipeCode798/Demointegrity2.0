@@ -123,10 +123,10 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
             moddate = info.get('/ModDate')
             producerName = str(info.get('/Producer'))
             title = str(info.get('/Title'))
-            funciones.ultima_fecha(ruta)
-            fecha = funciones.ultima_fecha(ruta)
-            funciones.ultima_fecha_hora(ruta)
-            hora = funciones.ultima_fecha_hora(ruta)
+            #funciones.ultima_fecha(ruta)
+            #fecha = funciones.ultima_fecha(ruta)
+            #funciones.ultima_fecha_hora(ruta)
+            #hora = funciones.ultima_fecha_hora(ruta)
 
             funciones.creacion_fecha(creationdate, moddate)
             creation_date = funciones.creacion_fecha(creationdate, moddate)
@@ -148,7 +148,7 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
                 'produccer': producerName,
                 'title': title,
                 'creation_date': creation_date,
-                'last_date': fecha,
+                # 'last_date': fecha,
                 'id_document': id
             }
 
@@ -166,8 +166,8 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
                 'creacion_fecha_hora': creacion_fecha_hora,
                 'modifica_fecha': modifica_fecha,
                 'modifica_fecha_hora': modifica_fecha_hora,
-                'fecha': fecha,
-                'hora': hora,
+                # 'fecha': fecha,
+                # 'hora': hora,
                 'creatorCont': creatorCont,
                 'authorCont': authorCont,
                 'producerCont': producerCont,
@@ -209,19 +209,19 @@ async def analisis_endpoint(list):
     creacion_fecha_hora = list[2]
     modifica_fecha = list[3]
     modifica_fecha_hora = list[4]
-    fecha = list[5]
-    hora = list[6]
-    creatorCont = list[7]
-    authorCont = list[8]
-    producerCont = list[9]
-    creatorName = list[10]
-    autorName = list[11]
-    producerName = list[12]
-    name = list[13]
-    phone = list[14]
-    dni = list[15]
-    id_apocrifo = list[16]
-    id_document = list[17]
+    # fecha = list[5]
+    # hora = list[6]
+    creatorCont = list[5]
+    authorCont = list[6]
+    producerCont = list[7]
+    creatorName = list[8]
+    autorName = list[9]
+    producerName = list[10]
+    name = list[11]
+    phone = list[12]
+    dni = list[13]
+    id_apocrifo = list[14]
+    id_document = list[15]
 
     data = {
         "creator": creatorName,
@@ -272,14 +272,14 @@ async def analisis_endpoint(list):
         conn.status(apocrifo)
         conn.info_apocrifo(data)
         resultado = "Este documento posiblemente es apocrifo"
-    elif date > fecha:
-        conn.status(apocrifo)
-        conn.info_apocrifo(data)
-        resultado = "Este documento posiblemente es apocrifo"
-    elif hour > hora:
-        conn.status(apocrifo)
-        conn.info_apocrifo(data)
-        resultado = "Este documento posiblemente es apocrifo"
+    # elif date > fecha:
+    #     conn.status(apocrifo)
+    #     conn.info_apocrifo(data)
+    #     resultado = "Este documento posiblemente es apocrifo"
+    # elif hour > hora:
+    #     conn.status(apocrifo)
+    #     conn.info_apocrifo(data)
+    #     resultado = "Este documento posiblemente es apocrifo"
     else:
         conn.status(autentico)
         resultado = "Este docuemto es autentico"
