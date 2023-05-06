@@ -252,10 +252,6 @@ async def analisis_endpoint(list):
         conn.status(apocrifo)
         conn.info_apocrifo(data)
         resultado = "Este documento posiblemente es apocrifo"
-    elif authorCont >= 1:
-        conn.status(apocrifo)
-        conn.info_apocrifo(data)
-        resultado = "Este documento posiblemente es apocrifo o el autor de este documento ha intentado subir documentos posiblemente apocrifos anteriormente"
     elif producerCont >= 1:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
@@ -272,6 +268,10 @@ async def analisis_endpoint(list):
         conn.status(apocrifo)
         conn.info_apocrifo(data)
         resultado = "Este documento posiblemente es apocrifo"
+    elif authorCont >= 1:
+        conn.status(apocrifo)
+        conn.info_apocrifo(data)
+        resultado = "Este documento posiblemente es apocrifo o el autor de este documento ha intentado subir documentos posiblemente apocrifos anteriormente"
     # elif date > fecha:
     #     conn.status(apocrifo)
     #     conn.info_apocrifo(data)
