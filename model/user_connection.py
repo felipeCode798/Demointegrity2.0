@@ -277,5 +277,13 @@ class UserConnection():
             data = cur.fetchone()
             return data
 
+    # Contar todos los log_casos
+    def count_log_casos(self):
+        with self.db.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM log_casos")
+            data = cur.fetchone()
+            data = data[0]
+            return data
+
     def __def__(self):
         self.db.close()

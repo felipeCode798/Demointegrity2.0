@@ -76,16 +76,20 @@ Return: array -> data
 """
 @app.get("/api/log_casos", status_code=HTTP_200_OK)
 async def read_log_casos():
-    data = conn.read_log_casos()
+    count = conn.count_log_casos()
 
-    data2 = {
-        "id" : data[0][0],
-        "name" : data[0][1],
-        "dni" : data[0][2],
-        "title" : data[0][3],
-        "log" : data[0][4],
-    }
-    return data2
+    data_list = []
+    for i in range(count):
+        data = conn.read_log_casos()
+        data_dict = {
+            "id" : data[i][0],
+            "name" : data[i][1],
+            "dni" : data[i][2],
+            "title" : data[i][3],
+            "log" : data[i][4],
+        }
+        data_list.append(data_dict)
+    return data_list
 
 """
 Keyword arguments: Id
