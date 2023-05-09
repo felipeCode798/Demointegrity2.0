@@ -12,20 +12,13 @@ from typing import List
 app = FastAPI()
 conn = UserConnection()
 
-origins = [
-    "http://localhost",
-    "http://localhost:4200"
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
 
 """
 Keyword arguments: list, id
@@ -72,9 +65,34 @@ async def consulta_autor(autor: str):
     data = conn.consulta_autor(autor)
     return data
 
+#---------------------------------------------------------------------------------#
+#--------------- GET LOG CASOS----------------------------------------------------#
+#---------------------------------------------------------------------------------#
+
+"""
+Keyword arguments: None
+argument -- Consulta los casos de un documento
+Return: array -> data
+"""
+@app.get("/api/log_casos", status_code=HTTP_200_OK)
+async def read_log_casos():
+    data = conn.read_log_casos()
+    return data
+
+"""
+Keyword arguments: Id
+argument -- consulta los casos de un documento por id
+Return: array -> data
+"""
+@app.get("/api/log_casos/{id}", status_code=HTTP_200_OK)
+async def read_log_casos_id(id: int):
+    data = conn.read_log_casos_id(id)
+    return data
+
+
 
 #---------------------------------------------------------------------------------#
-#--------------- GET -------------------------------------------------------------#
+#--------------- POST-------------------------------------------------------------#
 #---------------------------------------------------------------------------------#
 
 """
@@ -107,6 +125,15 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
         extension = filename.rsplit('.', 1)[1].lower()
 
         if extension != 'pdf':
+            data = {
+                'name': name,
+                'dni': dni,
+                'newName': newName,
+                'log_caso': 0,
+            }
+
+            data.update({'log_caso': 0})
+
             tipo = 'img'
             
             # Analizar la imagen utilizando diferentes técnicas.
@@ -119,11 +146,15 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
             results['metadata'] = funciones.detect_metadata(ruta)
             results['compression'] = funciones.detect_compression(ruta)
             results['brightness'] = funciones.analyze_brightness(ruta)
-            if results['manipulation'] == 'La imagen probablemente no ha sido Manipulada':
+            if results['resultado'] == 'La imagen probablemente no ha sido Manipulada':
                 if results['metadata'] != True:
                     results['resultado'] = 'La imagen probablemente no ha sido Manipulada'
+                    data.update({'log_caso': 221})
+                    conn.log_casos(data)
                 else:
                     results['resultado'] = 'La imagen probablemente ha sido Manipulada'
+                    data.update({'log_caso': 211})
+                    conn.log_casos(data)
         else:
             pdfReader = PyPDF2.PdfReader(open(ruta, 'rb'))
             info = pdfReader.metadata
@@ -176,8 +207,8 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
                 'creacion_fecha_hora': creacion_fecha_hora,
                 'modifica_fecha': modifica_fecha,
                 'modifica_fecha_hora': modifica_fecha_hora,
-                'fecha': fecha,
-                'hora': hora,
+                # 'fecha': fecha,
+                # 'hora': hora,
                 'creatorCont': creatorCont,
                 'authorCont': authorCont,
                 'producerCont': producerCont,
@@ -189,6 +220,7 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
                 'dni': dni,
                 'id_apocrifo': id_apocrifo,
                 'id_status': id_status,
+                'newName': newName,
             }
 
             data = list(data.values())
@@ -219,19 +251,20 @@ async def analisis_endpoint(list):
     creacion_fecha_hora = list[2]
     modifica_fecha = list[3]
     modifica_fecha_hora = list[4]
-    fecha = list[5]
-    hora = list[6]
-    creatorCont = list[7]
-    authorCont = list[8]
-    producerCont = list[9]
-    creatorName = list[10]
-    autorName = list[11]
-    producerName = list[12]
-    name = list[13]
-    phone = list[14]
-    dni = list[15]
-    id_apocrifo = list[16]
-    id_document = list[17]
+    # fecha = list[5]
+    # hora = list[6]
+    creatorCont = list[5]
+    authorCont = list[6]
+    producerCont = list[7]
+    creatorName = list[8]
+    autorName = list[9]
+    producerName = list[10]
+    name = list[11]
+    phone = list[12]
+    dni = list[13]
+    id_apocrifo = list[14]
+    id_document = list[15]
+    newName = list[16]
 
     data = {
         "creator": creatorName,
@@ -240,7 +273,8 @@ async def analisis_endpoint(list):
         "name": name,
         "phone": phone,
         "dni": dni,
-        'id_apocrifo': id_apocrifo
+        'id_apocrifo': id_apocrifo,
+        'newName': newName
     }
 
     apocrifo = {
@@ -260,38 +294,61 @@ async def analisis_endpoint(list):
     if creatorCont >= 1:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
+        log_caso = 111
+        data['log_caso'] = log_caso
+        conn.log_casos(data)
         resultado = "Este documento posiblemente es apocrifo"
     elif producerCont >= 1:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
+        log_caso = 112
+        data['log_caso'] = log_caso
+        conn.log_casos(data)
         resultado = "Este documento posiblemente es apocrifo"
-    elif creacion_fecha != modifica_fecha:
+    elif creacion_fecha == 0 and modifica_fecha != 0:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
+        log_caso = 113
+        data['log_caso'] = log_caso
+        conn.log_casos(data)
         resultado = "Este documento posiblemente es apocrifo"
     elif creacion_fecha_hora != modifica_fecha_hora:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
+        log_caso = 114
+        data['log_caso'] = log_caso
+        conn.log_casos(data)
         resultado = "Este documento posiblemente es apocrifo"
     elif creacion_fecha == 0:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
+        log_caso = 115
+        data['log_caso'] = log_caso
+        conn.log_casos(data)
         resultado = "Este documento posiblemente es apocrifo"
     elif authorCont >= 1:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
+        log_caso = 116
+        data['log_caso'] = log_caso
+        conn.log_casos(data)
         resultado = "Este documento posiblemente es apocrifo o el autor de este documento ha intentado subir documentos posiblemente apocrifos anteriormente"
-    elif date > fecha:
-        conn.status(apocrifo)
-        conn.info_apocrifo(data)
-        resultado = "Este documento posiblemente es apocrifo"
-    elif hour > hora:
-        conn.status(apocrifo)
-        conn.info_apocrifo(data)
-        resultado = "Este documento posiblemente es apocrifo"
+    # elif date > fecha:
+    #     conn.status(apocrifo)
+    #     conn.info_apocrifo(data)
+    #     resultado = "Este documento posiblemente es apocrifo"
+    # elif hour > hora:
+    #     conn.status(apocrifo)
+    #     conn.info_apocrifo(data)
+    #     resultado = "Este documento posiblemente es apocrifo"
     else:
         conn.status(autentico)
+        log_caso = 121
+        data['log_caso'] = log_caso
+        conn.log_casos(data)
         resultado = "Este docuemto es autentico"
 
     return resultado
+
+
 

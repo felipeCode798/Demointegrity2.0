@@ -251,6 +251,31 @@ class UserConnection():
             cur.execute("SELECT document FROM documents WHERE id_document = %s", (id_document,))
             data = cur.fetchone()
             return data
+        
+    #---------------------------------------------------------------------------------#
+    #--------------- LOG DE CASOS  ---------------------------------------------------#
+    #---------------------------------------------------------------------------------#
+
+    def log_casos(self, data):
+        with self.db.cursor() as cur:
+            cur.execute("SELECT MAX(id_log) FROM log_casos")
+            result = cur.fetchone()
+            next_id = result[0] + 1 if result[0] else 1  # Si no hay registros, empezar en 1
+            data['id_log'] = next_id
+            cur.execute("INSERT INTO log_casos (id_log,name,dni,title,log_caso) VALUES (%(id_log)s, %(name)s,%(dni)s, %(newName)s, %(log_caso)s)", data)
+            self.db.commit()
+
+    def read_log_casos(self):
+        with self.db.cursor() as cur:
+            cur.execute("SELECT * FROM log_casos")
+            data = cur.fetchall()
+            return data
+        
+    def read_log_casos_id(self, id_log):
+        with self.db.cursor() as cur:
+            cur.execute("SELECT * FROM log_casos WHERE id_log = %s", (id_log,))
+            data = cur.fetchone()
+            return data
 
     def __def__(self):
         self.db.close()

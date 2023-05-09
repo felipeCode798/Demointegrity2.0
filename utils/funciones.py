@@ -55,13 +55,12 @@ def ultima_fecha_hora(ruta):
 # Fecha de creacion del documento
 def creacion_fecha(creationdate, moddate):
 
-    creation_date = creationdate
-
     if creationdate != None:
         year = creationdate[2:6]
         day = creationdate[6:8]
         month = creationdate[8:10]
         creation_date = int(('{}{}{}'.format(year,day,month)))
+        print('creation_date: ', creation_date)
     else:
         year = '00'
         day = '00'
