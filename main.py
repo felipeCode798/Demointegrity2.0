@@ -77,7 +77,15 @@ Return: array -> data
 @app.get("/api/log_casos", status_code=HTTP_200_OK)
 async def read_log_casos():
     data = conn.read_log_casos()
-    return data
+
+    data2 = {
+        "id" : data[0][0],
+        "name" : data[0][1],
+        "dni" : data[0][2],
+        "title" : data[0][3],
+        "log" : data[0][4],
+    }
+    return data2
 
 """
 Keyword arguments: Id
@@ -87,7 +95,14 @@ Return: array -> data
 @app.get("/api/log_casos/{id}", status_code=HTTP_200_OK)
 async def read_log_casos_id(id: int):
     data = conn.read_log_casos_id(id)
-    return data
+    data2 = {
+        "id" : data[0][0],
+        "name" : data[0][1],
+        "dni" : data[0][2],
+        "title" : data[0][3],
+        "log" : data[0][4],
+    }
+    return data2
 
 
 
