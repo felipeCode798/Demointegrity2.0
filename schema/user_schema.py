@@ -6,11 +6,8 @@ from fastapi import UploadFile, File
 class UserSchema(BaseModel):
     name: str
     dni: int
-    id_ciudad: int
     phone: int
-    email: str
-    address: str
-    photo: Optional[str]
+
 
 class InvestigatorSchema(BaseModel):
     id_user: int

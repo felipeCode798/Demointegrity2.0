@@ -20,8 +20,16 @@ class UserConnection():
             result = cur.fetchone()
             next_id = result[0] + 1 if result[0] else 1  # Si no hay registros, empezar en 1
             data['user_id'] = next_id
-            cur.execute("INSERT INTO users (user_id,name,dni,id_ciudad,phone,email,address,photo) VALUES (%(user_id)s, %(name)s, %(dni)s, %(id_ciudad)s, %(phone)s, %(email)s, %(address)s, %(photo)s)", data)
+            cur.execute("INSERT INTO users (user_id,name,dni,phone) VALUES (%(user_id)s, %(name)s, %(dni)s, %(phone)s)", data)
             self.db.commit()
+
+        
+    def consulta_id_user(self):
+        with self.db.cursor() as cur:
+            cur.execute("SELECT MAX(user_id) FROM public.users")
+            data = cur.fetchone()
+            data = data[0]
+            return data
 
     def read_users(self):
         with self.db.cursor() as cur:
@@ -90,7 +98,7 @@ class UserConnection():
             result = cur.fetchone()
             next_id = result[0] + 1 if result[0] else 1  # Si no hay registros, empezar en 1
             data['id_document'] = next_id
-            cur.execute("INSERT INTO documents (id_document,id_user,id_product,id_service,id_city,id_investigator,value,document) VALUES (%(id_document)s,%(id_user)s, %(id_product)s, %(id_service)s, %(id_city)s, %(id_investigator)s, %(value)s, %(document)s)", data)
+            cur.execute("INSERT INTO documents (id_document,id_user,document,id_investigator) VALUES (%(id_document)s,%(id_user)s, %(document)s, %(id_investigator)s)", data)
             self.db.commit()
     
     def read_documents(self):
@@ -129,7 +137,7 @@ class UserConnection():
         with self.db.cursor() as cur:
             cur.execute("SELECT MAX(id_document) FROM public.documents")
             data = cur.fetchone()
-            data = data[0]
+            data = data[0] + 1 if data[0] else 1 # Si no hay registros, empezar en 1
             return data
 
     def status(self, data):

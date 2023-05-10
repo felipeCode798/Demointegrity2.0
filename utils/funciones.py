@@ -60,7 +60,6 @@ def creacion_fecha(creationdate, moddate):
         day = creationdate[6:8]
         month = creationdate[8:10]
         creation_date = int(('{}{}{}'.format(year,day,month)))
-        print('creation_date: ', creation_date)
     else:
         year = '00'
         day = '00'
@@ -182,21 +181,16 @@ def detect_manipulation(image_path):
     # Calculo del porcentaje de píxeles manipulados
     percent_manipulated = 100 * num_manipulated_pixels / total_pixels
 
-    print("manipulation: ", percent_manipulated)
-
     longitud = len(str(percent_manipulated))
-    print('longitud: ', longitud)
 
     if longitud == 5:
         variable = str(percent_manipulated)
         variable = variable[0:2]
         variable = int(variable)
-        print(variable)
 
         variable2 = 00
 
         variable3 = variable - variable2
-        print('variable3: ', variable3)
 
         if variable3 <= 13:
             
@@ -207,15 +201,12 @@ def detect_manipulation(image_path):
     variable = str(percent_manipulated)
     variable = variable[0:2]
     variable = int(variable)
-    print(variable)
 
     variable2 = str(percent_manipulated)
     variable2 = variable2[3:5]
     variable2 = int(variable2)
-    print(variable2)
 
     variable3 = variable - variable2
-    print('variable3: ', variable3)
 
     # Devuelve True si la imagen ha sido manipulada, False en caso contrario
 
@@ -232,12 +223,8 @@ def detect_manipulation(image_path):
     # else:
     #     percent_manipulated = 83.63
 
-    print("variable3: ", variable3)
-
     detect_metadata(image_path)
     meta = detect_metadata(image_path)
-
-    print(" de la funcion meta: ", meta)
 
     if variable3 <= 13:
         return 'La imagen probablemente no ha sido Manipulada'
@@ -271,8 +258,6 @@ def detect_manipulation_pattern(image_path):
     # Calcula la varianza del laplaciano
     variance = np.var(laplacian)
 
-    print(variance)
-
     # Retorna True si la varianza está por debajo de cierto umbral,
     # indicando que la imagen ha sido manipulada
     return variance < 100
@@ -295,9 +280,6 @@ def detect_noise(image_path, threshold=10):
     # Calcula la desviación estándar del Laplaciano para medir el ruido
     std_dev = np.std(laplacian)
 
-    print("noise: ", std_dev)
-    print("threshold: ", threshold)
-
     # Comprobar si la desviación estándar está por debajo del umbral
     if std_dev < threshold:
         return False
@@ -312,8 +294,6 @@ def detect_metadata(image_path):
 
     # Carga la imagen y extrae los datos EXIF
     exif_data = piexif.load(image_path)
-
-    print("metadata: ", exif_data)
 
     value_0th = exif_data.get('0th')
 
@@ -341,8 +321,6 @@ def detect_compression(image_path):
     # Calcula la relación de compresión
     compression_ratio = compressed_size / original_size
 
-    print("compression ratio: ", compression_ratio)
-
     # Comprueba si la relación de compresión está por encima de un umbral
     threshold = 0.9
     if compression_ratio < threshold:
@@ -360,8 +338,6 @@ def analyze_brightness(image_path):
 
     # Calcula el valor de píxel promedio de la imagen en escala de grises
     average_brightness = cv2.mean(gray)[0]
-
-    print("brightness: ", average_brightness)
 
     # Devuelva True si el brillo promedio es demasiado alto o demasiado bajo
     if average_brightness < 50 or average_brightness > 200:

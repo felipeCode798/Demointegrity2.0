@@ -26,7 +26,7 @@ argument -- Inserta el analisis final de un documento
 Return: Response 204
 """
 @app.put("/api/update_document/{id_document}", status_code=HTTP_204_NO_CONTENT)
-async def update_documents(list, id: int):
+async def update_documents(list):
     data = list
     conn.update_documents(data)
     return Response(status_code=HTTP_204_NO_CONTENT)
@@ -200,7 +200,17 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
             funciones.modifica_fecha_hora(moddate, info)
             modifica_fecha_hora = funciones.modifica_fecha_hora(moddate, info)
 
+
+            data_info = {
+            'name': name,
+            'phone': phone,
+            'dni': dni,
+            }
+
+            conn.info_user(data_info)
+
             id = conn.consulta_id()
+            id_user = conn.consulta_id_user()
 
             data = {
                 'creator': creatorName,
@@ -209,10 +219,15 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
                 'title': title,
                 'creation_date': creation_date,
                 'last_date': fecha,
-                'id_document': id
+                'id_document': id,
+                'id_user': id_user,
+                'document': newName,
+                'id_investigator': 1,
             }
 
-            await update_documents(data, id)
+            conn.info_documents(data)
+
+            await update_documents(data)
             creatorCont = await consulta_creator(creatorName)
             authorCont = await consulta_autor(autorName)
             producerCont = await consulta_producer(producerName)
