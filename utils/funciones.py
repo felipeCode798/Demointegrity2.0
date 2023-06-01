@@ -210,19 +210,6 @@ def detect_manipulation(image_path):
 
     # Devuelve True si la imagen ha sido manipulada, False en caso contrario
 
-    # if percent_manipulated == 89.78910999116745:
-    #     percent_manipulated = 85.00
-    # elif percent_manipulated == 90.0501294912518:
-    #     percent_manipulated = 85.00
-    # elif percent_manipulated == 88.79065303662104:
-    #     percent_manipulated = 85.00
-    # elif percent_manipulated == 95.3337684119674:
-    #     percent_manipulated = 85.00
-    # elif percent_manipulated == 85.00089071609086:
-    #     percent_manipulated = 85.00
-    # else:
-    #     percent_manipulated = 83.63
-
     detect_metadata(image_path)
     meta = detect_metadata(image_path)
 

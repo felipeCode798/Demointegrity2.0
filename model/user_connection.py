@@ -23,7 +23,7 @@ class UserConnection():
             cur.execute("INSERT INTO users (user_id,name,dni,phone) VALUES (%(user_id)s, %(name)s, %(dni)s, %(phone)s)", data)
             self.db.commit()
 
-        
+
     def consulta_id_user(self):
         with self.db.cursor() as cur:
             cur.execute("SELECT MAX(user_id) FROM public.users")
@@ -42,7 +42,7 @@ class UserConnection():
             cur.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
             data = cur.fetchone()
             return data
-        
+
     #---------------------------------------------------------------------------------#
     #--------------- City CRUD -------------------------------------------------------#
     #---------------------------------------------------------------------------------#
@@ -65,24 +65,24 @@ class UserConnection():
             data['inv_id'] = next_id
             cur.execute("INSERT INTO investigator (inv_id, name, dni) VALUES (%(inv_id)s,%(name)s, %(dni)s)", data)
             self.db.commit()
-    
+
     def read_investigator(self):
         with self.db.cursor() as cur:
             cur.execute("SELECT * FROM investigator")
             data = cur.fetchall()
             return data
-    
+
     def read_investigator_id(self, inv_id):
         with self.db.cursor() as cur:
             cur.execute("SELECT * FROM investigator WHERE inv_id = %s", (inv_id,))
             data = cur.fetchone()
             return data
-    
+
     def update_investigator(self, data):
         with self.db.cursor() as cur:
             cur.execute("UPDATE investigator SET name = %(name)s, dni = %(dni)s WHERE inv_id = %(inv_id)s", data)
             self.db.commit()
-    
+
     def delete_investigator(self, inv_id):
         with self.db.cursor() as cur:
             cur.execute("DELETE FROM investigator WHERE inv_id = %s", (inv_id,))
@@ -100,13 +100,13 @@ class UserConnection():
             data['id_document'] = next_id
             cur.execute("INSERT INTO documents (id_document,id_user,document,id_investigator) VALUES (%(id_document)s,%(id_user)s, %(document)s, %(id_investigator)s)", data)
             self.db.commit()
-    
+
     def read_documents(self):
         with self.db.cursor() as cur:
             cur.execute("SELECT * FROM documents")
             data = cur.fetchall()
             return data
-    
+
     def read_documents_id(self, id_document):
         with self.db.cursor() as cur:
             cur.execute("SELECT * FROM documents WHERE id_document = %s", (id_document,))
@@ -123,7 +123,7 @@ class UserConnection():
             cur.execute("UPDATE documents SET creator = %(creator)s, autor = %(autor)s, producer = %(produccer)s, title = %(title)s WHERE id_document = %(id_document)s", data)
             self.db.commit()
 
-    
+
     def delete_documents(self, id_document):
         with self.db.cursor() as cur:
             cur.execute("DELETE FROM documents WHERE id_document = %s", (id_document,))
@@ -146,7 +146,7 @@ class UserConnection():
             data['status'] = status
             cur.execute("UPDATE documents SET status = %(status)s WHERE id_document = %(id_document)s", data)
             self.db.commit()
-    
+
     def consulta_id_apocrifo(self):
         with self.db.cursor() as cur:
             cur.execute("SELECT MAX(id_apocrifo) FROM public.apocrypha")
@@ -194,13 +194,13 @@ class UserConnection():
             cur.execute("SELECT * FROM apocrypha")
             data = cur.fetchall()
             return data
-        
+
     def read_apocrifo_id(self, id_apocrifo):
         with self.db.cursor() as cur:
             cur.execute("SELECT * FROM apocrypha WHERE id_apocrifo = %s", (id_apocrifo,))
             data = cur.fetchone()
             return data
-        
+
     def delete_apocrifo(self, id_apocrifo):
         with self.db.cursor() as cur:
             cur.execute("DELETE FROM apocrypha WHERE id_apocrifo = %s", (id_apocrifo,))
@@ -210,19 +210,102 @@ class UserConnection():
     #--------------- Creator y Producer Consulta -------------------------------------#
     #---------------------------------------------------------------------------------#
 
-    def consulta_creator(self, creator):
-        with self.db.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM listblack WHERE creator = %s", (creator,))
-            data = cur.fetchone()
-            data = data[0]
-            return data
+    def consulta_creator(self, data_creator):
+        print(data_creator) 
 
-    def consulta_producer(self, producer):
-        with self.db.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM listblack WHERE producer = %s", (producer,))
-            data = cur.fetchone()
-            data = data[0]
-            return data
+        # check_verificacion = data_creator[1]
+        check_verificacion = data_creator['check_verificacion']
+        creator = data_creator['creatorName']
+
+        # print(check_verificacion)
+        print('aqui esta el check_verificacion1')
+        print(check_verificacion)
+
+
+        if check_verificacion == True:
+            with self.db.cursor() as cur:
+                cur.execute("SELECT COUNT(*) FROM listblack WHERE creator = %s AND creator <> 'Microsoft® Word para Microsoft 365' AND creator <> 'Microsoft® Word 2016' AND creator <> 'Microsoft® Word 2019' AND creator <> 'Microsoft® Word 2010'", (creator,))
+                data = cur.fetchone()
+                print(data)
+                data = data[0]
+                return data
+        else:
+            with self.db.cursor() as cur:
+                cur.execute("SELECT COUNT(*) FROM listblack WHERE creator = %s", (creator,))
+                data = cur.fetchone()
+                data = data[0]
+                return data
+
+    def consulta_producer(self, data_producer):
+        
+        print(data_producer) 
+
+        # check_verificacion = data_producer[1]
+        check_verificacion = data_producer['check_verificacion']
+        producer = data_producer['producerName']
+
+        # print(check_verificacion)
+        print('aqui esta el check_verificacion1')
+        print(check_verificacion)
+
+        if check_verificacion == True:
+            with self.db.cursor() as cur:
+                cur.execute("SELECT COUNT(*) FROM listblack WHERE producer = %s AND producer <> 'Microsoft® Word para Microsoft 365' AND producer <> 'Microsoft® Word 2016' AND producer <> 'Microsoft® Word 2019' AND producer <> 'Microsoft® Word 2010' ", (producer,))
+                data = cur.fetchone()
+                print(data)
+                data = data[0]
+                return data
+        else:
+            with self.db.cursor() as cur:
+                cur.execute("SELECT COUNT(*) FROM listblack WHERE producer = %s ", (producer,))
+                data = cur.fetchone()
+                data = data[0]
+                return data
+
+    #---------------------------------------------------------------------------------#
+    #--------------- Creator y Producer Consulta sin Work ----------------------------#
+    #---------------------------------------------------------------------------------#
+
+    # def consulta_creator_work(self, data_creator):
+        # soft_verify = ['Microsoft® Word para Microsoft 365', 'Microsoft® Word 2016', 'Microsoft® Word 2019', 'Microsoft® Word 2010']
+
+        # print(data_creator) 
+
+        # check_verificacion = data_creator[1]
+        # check_verificacion1 = data_creator['check_verificacion']
+
+        # print(check_verificacion)
+        # print(check_verificacion1)
+
+        # if check_verificacion == True:
+        #     with self.db.cursor() as cur:
+        #         cur.execute("SELECT COUNT(*) FROM listblack WHERE creator = %(creatorName)s AND creator <> 'Microsoft® Word para Microsoft 365' AND creator <> 'Microsoft® Word 2016' AND creator <> 'Microsoft® Word 2019' AND creator <> 'Microsoft® Word 2010'", (data_creator,))
+        #         data = cur.fetchone()
+        #         data = data[0]
+        #         return data
+        # else:
+        #     with self.db.cursor() as cur:
+        #         cur.execute("SELECT COUNT(*) FROM listblack WHERE creator = %(creatorName)s", (data_creator,))
+        #         data = cur.fetchone()
+        #         data = data[0]
+        #         return data
+
+    # def consulta_producer_work(self, data_producer):
+        
+        # soft_verify = ['Microsoft® Word para Microsoft 365', 'Microsoft® Word 2016', 'Microsoft® Word 2019', 'Microsoft® Word 2010']
+
+        # if check_verificacion == True:
+        #     with self.db.cursor() as cur:
+        #         cur.execute("SELECT COUNT(*) FROM listblack WHERE producer = %(producerName)s AND producer <> 'Microsoft® Word para Microsoft 365' AND producer <> 'Microsoft® Word 2016' AND producer <> 'Microsoft® Word 2019' AND producer <> 'Microsoft® Word 2010' ", (data_producer,))
+        #         data = cur.fetchone()
+        #         data = data[0]
+        #         return data
+        # else:
+        #     with self.db.cursor() as cur:
+        #         cur.execute("SELECT COUNT(*) FROM listblack WHERE producer = %s ", (data_producer,))
+        #         data = cur.fetchone()
+        #         data = data[0]
+        #         return data
 
     #---------------------------------------------------------------------------------#
     #--------------- Producto Servivio CRUD ------------------------------------------#
@@ -278,7 +361,7 @@ class UserConnection():
             cur.execute("SELECT * FROM log_casos")
             data = cur.fetchall()
             return data
-        
+
     def read_log_casos_id(self, id_log):
         with self.db.cursor() as cur:
             cur.execute("SELECT * FROM log_casos WHERE id_log = %s", (id_log,))

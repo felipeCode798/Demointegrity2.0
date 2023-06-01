@@ -119,8 +119,8 @@ Keyword arguments: name, phone, dni, file
 argument -- devuelve el resultado del analisis de un documento
 Return: resultado
 """
-@app.post("/uploadfile/{name}/{phone}/{dni}")
-async def create_upload_file(name: str, phone: int, dni: int, files: List[UploadFile] = File(...)):
+@app.post("/uploadfile/{name}/{phone}/{dni}/{check_verificacion}")
+async def create_upload_file(name: str, phone: int, dni: int, check_verificacion: bool, files: List[UploadFile] = File(...)):
 
     now = datetime.now()
     time = now.strftime("%Y%H%M%S")
@@ -168,11 +168,11 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
             if results['resultado'] == 'La imagen probablemente no ha sido Manipulada':
                 if results['metadata'] != True:
                     results['resultado'] = 'La imagen probablemente no ha sido Manipulada'
-                    data.update({'log_caso': 221})
+                    data.update({'log_caso': 228})
                     conn.log_casos(data)
                 else:
                     results['resultado'] = 'La imagen probablemente ha sido Manipulada'
-                    data.update({'log_caso': 211})
+                    data.update({'log_caso': 217})
                     conn.log_casos(data)
         else:
             pdfReader = PyPDF2.PdfReader(open(ruta, 'rb'))
@@ -200,7 +200,6 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
             funciones.modifica_fecha_hora(moddate, info)
             modifica_fecha_hora = funciones.modifica_fecha_hora(moddate, info)
 
-
             data_info = {
             'name': name,
             'phone': phone,
@@ -223,14 +222,26 @@ async def create_upload_file(name: str, phone: int, dni: int, files: List[Upload
                 'id_user': id_user,
                 'document': newName,
                 'id_investigator': 1,
+                'check_verificacion': check_verificacion,
             }
 
             conn.info_documents(data)
 
+            data_creator = {
+                'creatorName' : creatorName,
+                'check_verificacion' : check_verificacion,
+            }
+
+            data_producer = {
+                'producerName' : producerName,
+                'check_verificacion' : check_verificacion,
+            }
+
+
             await update_documents(data)
-            creatorCont = await consulta_creator(creatorName)
+            creatorCont = await consulta_creator(data_creator)
             authorCont = await consulta_autor(autorName)
-            producerCont = await consulta_producer(producerName)
+            producerCont = await consulta_producer(data_producer)
             tipo = 'pdf'
             id_apocrifo = conn.next_id_apocrifo()
             id_status = conn.consulta_id()
@@ -331,42 +342,42 @@ async def analisis_endpoint(list):
         log_caso = 111
         data['log_caso'] = log_caso
         conn.log_casos(data)
-        resultado = "Este documento posiblemente es apocrifo"
+        resultado = "Este documento posiblemete ha sido manipulado"
     elif producerCont >= 1:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
         log_caso = 112
         data['log_caso'] = log_caso
         conn.log_casos(data)
-        resultado = "Este documento posiblemente es apocrifo"
+        resultado = "Este documento posiblemente ha sido manipulado"
     elif creacion_fecha == 0 and modifica_fecha != 0:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
         log_caso = 113
         data['log_caso'] = log_caso
         conn.log_casos(data)
-        resultado = "Este documento posiblemente es apocrifo"
+        resultado = "Este documento posiblemente ha sido manipulado"
     elif creacion_fecha_hora != modifica_fecha_hora:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
         log_caso = 114
         data['log_caso'] = log_caso
         conn.log_casos(data)
-        resultado = "Este documento posiblemente es apocrifo"
+        resultado = "Este documento posiblemente ha sido manipulado"
     elif creacion_fecha == 0:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
         log_caso = 115
         data['log_caso'] = log_caso
         conn.log_casos(data)
-        resultado = "Este documento posiblemente es apocrifo"
+        resultado = "Este documento posiblemente ha sido manipulado"
     elif authorCont >= 1:
         conn.status(apocrifo)
         conn.info_apocrifo(data)
         log_caso = 116
         data['log_caso'] = log_caso
         conn.log_casos(data)
-        resultado = "Este documento posiblemente es apocrifo o el autor de este documento ha intentado subir documentos posiblemente apocrifos anteriormente"
+        resultado = "Este documento posiblemente ha sido manipulado o anteriormente el usuario ha intentado ingresar un documento manipulado"
     # elif date > fecha:
     #     conn.status(apocrifo)
     #     conn.info_apocrifo(data)
@@ -377,7 +388,7 @@ async def analisis_endpoint(list):
     #     resultado = "Este documento posiblemente es apocrifo"
     else:
         conn.status(autentico)
-        log_caso = 121
+        log_caso = 128
         data['log_caso'] = log_caso
         conn.log_casos(data)
         resultado = "Este docuemto es autentico"
