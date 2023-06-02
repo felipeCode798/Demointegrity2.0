@@ -130,13 +130,13 @@ async def create_upload_file(name: str, phone: int, dni: int, check_verificacion
 
         document = file
 
+        if not os.path.exists("uploads"):
+            os.mkdir("uploads")
+
         if document != '':
             newName = time + document.filename
             with open("./uploads/"+newName, "wb") as f:
                 f.write(file.file.read())
-
-        if not os.path.exists("uploads"):
-            os.mkdir("uploads")
 
         ruta = 'uploads/' + newName
 
