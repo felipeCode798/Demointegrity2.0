@@ -364,13 +364,13 @@ async def analisis_endpoint(list):
         data['log_caso'] = log_caso
         conn.log_casos(data)
         resultado = "Este documento posiblemente ha sido manipulado"
-    elif creacion_fecha == 0:
-        conn.status(apocrifo)
-        conn.info_apocrifo(data)
-        log_caso = 115
-        data['log_caso'] = log_caso
-        conn.log_casos(data)
-        resultado = "Este documento posiblemente ha sido manipulado"
+    # elif creacion_fecha == 0:
+    #     conn.status(apocrifo)
+    #     conn.info_apocrifo(data)
+    #     log_caso = 115
+    #     data['log_caso'] = log_caso
+    #     conn.log_casos(data)
+    #     resultado = "Este documento posiblemente ha sido manipulado"
     elif authorCont >= 1:
         conn.status(apocrifo)
         conn.info_apocrifo(data)

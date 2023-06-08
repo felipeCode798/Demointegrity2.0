@@ -211,22 +211,15 @@ class UserConnection():
     #---------------------------------------------------------------------------------#
 
     def consulta_creator(self, data_creator):
-        print(data_creator) 
 
         # check_verificacion = data_creator[1]
         check_verificacion = data_creator['check_verificacion']
         creator = data_creator['creatorName']
 
-        # print(check_verificacion)
-        print('aqui esta el check_verificacion1')
-        print(check_verificacion)
-
-
         if check_verificacion == True:
             with self.db.cursor() as cur:
                 cur.execute("SELECT COUNT(*) FROM listblack WHERE creator = %s AND creator <> 'Microsoft® Word para Microsoft 365' AND creator <> 'Microsoft® Word 2016' AND creator <> 'Microsoft® Word 2019' AND creator <> 'Microsoft® Word 2010'", (creator,))
                 data = cur.fetchone()
-                print(data)
                 data = data[0]
                 return data
         else:
@@ -238,21 +231,15 @@ class UserConnection():
 
     def consulta_producer(self, data_producer):
         
-        print(data_producer) 
 
         # check_verificacion = data_producer[1]
         check_verificacion = data_producer['check_verificacion']
         producer = data_producer['producerName']
 
-        # print(check_verificacion)
-        print('aqui esta el check_verificacion1')
-        print(check_verificacion)
-
         if check_verificacion == True:
             with self.db.cursor() as cur:
                 cur.execute("SELECT COUNT(*) FROM listblack WHERE producer = %s AND producer <> 'Microsoft® Word para Microsoft 365' AND producer <> 'Microsoft® Word 2016' AND producer <> 'Microsoft® Word 2019' AND producer <> 'Microsoft® Word 2010' ", (producer,))
                 data = cur.fetchone()
-                print(data)
                 data = data[0]
                 return data
         else:
@@ -269,13 +256,8 @@ class UserConnection():
     # def consulta_creator_work(self, data_creator):
         # soft_verify = ['Microsoft® Word para Microsoft 365', 'Microsoft® Word 2016', 'Microsoft® Word 2019', 'Microsoft® Word 2010']
 
-        # print(data_creator) 
-
         # check_verificacion = data_creator[1]
         # check_verificacion1 = data_creator['check_verificacion']
-
-        # print(check_verificacion)
-        # print(check_verificacion1)
 
         # if check_verificacion == True:
         #     with self.db.cursor() as cur:

@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 import piexif
 import imghdr
+import PyPDF2
 from scipy import fftpack
 from datetime import datetime
 
@@ -55,42 +56,66 @@ def ultima_fecha_hora(ruta):
 # Fecha de creacion del documento
 def creacion_fecha(creationdate, moddate):
 
-    if creationdate != None:
-        year = creationdate[2:6]
-        day = creationdate[6:8]
-        month = creationdate[8:10]
+    creation_date = str(creationdate)
+    creation_date = creation_date[0:13]
+
+    if isinstance(creationdate, PyPDF2.generic.IndirectObject):
+        year = '2023'
+        day = '07'
+        month = '02'
         creation_date = int(('{}{}{}'.format(year,day,month)))
+
     else:
-        year = '00'
-        day = '00'
-        month = '00'
-        creation_date = int(('{}{}{}'.format(year,day,month)))
+
+        if creationdate != None:
+            year = creationdate[2:6]
+            day = creationdate[6:8]
+            month = creationdate[8:10]
+            creation_date = int(('{}{}{}'.format(year,day,month)))
+        else:
+            year = '00'
+            day = '00'
+            month = '00'
+            creation_date = int(('{}{}{}'.format(year,day,month)))
 
     return creation_date
 
 # Hora de creacion del documento
 def creacion_fecha_hora(creationdate, moddate):
 
-    if creationdate != None:
-        hour = creationdate[10:12]
-        minu = creationdate[12:14]
-        secon = '00'
-        cero = 0
+    creation_date = str(creationdate)
+    creation_date = creation_date[0:13]
 
-        creation_hora = int(('{}{}{}'.format(hour,minu,secon)))
+    if isinstance(creationdate, PyPDF2.generic.IndirectObject):
+        year = '00'
+        day = '00'
+        month = '00'
+        creation_date = int(('{}{}{}'.format(year,day,month)))
+
+        return creation_date
+
     else:
-        hour = '00'
-        minu = '00'
-        secon = '00'
-        cero = 0
-        creation_hora = int(('{}{}{}'.format(hour,minu,secon)))
 
-    return creation_hora
+        if creationdate != None:
+            hour = creationdate[10:12]
+            minu = creationdate[12:14]
+            secon = '00'
+            cero = 0
+
+            creation_hora = int(('{}{}{}'.format(hour,minu,secon)))
+        else:
+            hour = '00'
+            minu = '00'
+            secon = '00'
+            cero = 0
+            creation_hora = int(('{}{}{}'.format(hour,minu,secon)))
+
+        return creation_hora
 
 # Fecha de modificacion desde metadatos
 def modifica_fecha(moddate):
 
-    if moddate != None:
+    if moddate != None and moddate != '':
         year = moddate[2:6]
         day = moddate[6:8]
         month = moddate[8:10]
@@ -107,6 +132,7 @@ def modifica_fecha(moddate):
 def modifica_fecha_hora(moddate, info):
 
     if moddate != None:
+        creationdate = info.get('/CreationDate')
         hour = moddate[10:12]
         minu = moddate[12:14]
         secon = '00'
@@ -114,9 +140,8 @@ def modifica_fecha_hora(moddate, info):
 
         modifi_hora = int(('{}{}{}'.format(hour,minu,secon)))
     else:
-        creationdate = info.get('/CreationDate')
-        hour = creationdate[10:12]
-        minu = creationdate[12:14]
+        hour = '00'
+        minu = '00'
         secon = '00'
         cero = 0
 
