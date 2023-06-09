@@ -177,12 +177,24 @@ async def create_upload_file(name: str, phone: int, dni: int, check_verificacion
         else:
             pdfReader = PyPDF2.PdfReader(open(ruta, 'rb'))
             info = pdfReader.metadata
-            creatorName = str(info.get('/Creator'))
-            autorName = str(info.get('/Author'))
-            creationdate = info.get('/CreationDate')
-            moddate = info.get('/ModDate')
-            producerName = str(info.get('/Producer'))
-            title = str(info.get('/Title'))
+            if info is not None:
+                creatorName = str(info.get('/Creator'))
+                autorName = str(info.get('/Author'))
+                creationdate = info.get('/CreationDate')
+                moddate = info.get('/ModDate')
+                producerName = str(info.get('/Producer'))
+                title = str(info.get('/Title'))
+            else:
+                creatorName = 'No hay creador'
+                autorName = 'No hay autor'
+                creationdate = None
+                moddate = None
+                producerName = 'No hay productor'
+                title = 'No hay titulo'
+            
+            
+            
+            
             funciones.ultima_fecha(ruta)
             fecha = funciones.ultima_fecha(ruta)
             funciones.ultima_fecha_hora(ruta)
