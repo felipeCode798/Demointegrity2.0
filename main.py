@@ -377,7 +377,7 @@ async def analisis_endpoint(list):
         log_caso = 116
         data['log_caso'] = log_caso
         conn.log_casos(data)
-        resultado = "Este documento posiblemente ha sido manipulado o anteriormente el usuario ha intentado ingresar un documento manipulado"
+        resultado = "Este documento se presume autentico, pero se recomienda verificar ya que se dectecto una actividad sospechosa"
     # elif date > fecha:
     #     conn.status(apocrifo)
     #     conn.info_apocrifo(data)
@@ -391,7 +391,7 @@ async def analisis_endpoint(list):
         log_caso = 128
         data['log_caso'] = log_caso
         conn.log_casos(data)
-        resultado = "Este docuemto es autentico"
+        resultado = "Este docuemto se considera autentico"
 
     return resultado
 
