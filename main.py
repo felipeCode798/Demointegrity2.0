@@ -407,5 +407,9 @@ async def analisis_endpoint(list):
 
     return resultado
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="54.237.223.13", port=8000, ssl_keyfile="/home/ssl/1c72091d0684ca66.pem", ssl_certfile="/home/ssl/private_key.key")
+
 
 
