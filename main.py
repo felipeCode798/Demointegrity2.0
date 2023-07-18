@@ -8,6 +8,8 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
+import ssl
+import uvicorn
 
 app = FastAPI()
 conn = UserConnection()
@@ -19,6 +21,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+ssl_context.load_cert_chain("/certificados/1c72091d0684ca66.pem", keyfile="/certificados/generated-private.key")
 
 """
 Keyword arguments: list, id
@@ -408,8 +413,7 @@ async def analisis_endpoint(list):
     return resultado
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="54.237.223.13", port=8000, ssl_keyfile="/home/ssl/1c72091d0684ca66.pem", ssl_certfile="/home/ssl/private_key.key")
+    uvicorn.run(app, host="0.0.0.0", port=443, ssl=ssl_context)
 
 
 
