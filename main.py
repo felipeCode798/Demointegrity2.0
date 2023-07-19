@@ -22,8 +22,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-ssl_context.load_cert_chain("/certificados/1c72091d0684ca66.pem", keyfile="/certificados/generated-private.key")
 
 """
 Keyword arguments: list, id
@@ -413,7 +411,7 @@ async def analisis_endpoint(list):
     return resultado
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=443, ssl=ssl_context)
+    uvicorn.run(app, host="0.0.0.0", port=443, ssl_keyfile="/home/ssl/1c72091d0684ca66.pem", ssl_certfile="/home/ssl/private_key.key")
 
 
 

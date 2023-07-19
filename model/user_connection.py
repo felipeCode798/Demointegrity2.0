@@ -15,13 +15,19 @@ class UserConnection():
     #---------------------------------------------------------------------------------#
 
     def info_user(self, data):
-        with self.db.cursor() as cur:
-            cur.execute("SELECT MAX(user_id) FROM users")
-            result = cur.fetchone()
-            next_id = result[0] + 1 if result[0] else 1  # Si no hay registros, empezar en 1
-            data['user_id'] = next_id
-            cur.execute("INSERT INTO users (user_id,name,dni,phone) VALUES (%(user_id)s, %(name)s, %(dni)s, %(phone)s)", data)
-            self.db.commit()
+        try:
+            with self.db.cursor() as cur:
+                cur.execute("SELECT MAX(user_id) FROM users")
+                result = cur.fetchone()
+                next_id = result[0] + 1 if result[0] else 1  # Si no hay registros, empezar en 1
+                data['user_id'] = next_id
+                cur.execute("INSERT INTO users (user_id, name, dni, phone) VALUES (%(user_id)s, %(name)s, %(dni)s, %(phone)s)", data)
+                self.db.commit()
+        except Exception as e:
+            self.db.rollback()
+            print("Error al insertar en la base de datos:", e)
+            raise e  
+
 
 
     def consulta_id_user(self):
