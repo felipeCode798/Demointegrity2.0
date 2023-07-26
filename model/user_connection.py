@@ -4,7 +4,7 @@ import psycopg2
 class UserConnection():
     def __init__(self):
         try:
-            self.db = psycopg2.connect("dbname=INTEGRITY user=postgres password=1234 host=localhost port=5432")
+            self.db = psycopg2.connect("dbname=INTEGRITY user=postgres password=12345678 host=postgres port=5432")
         except psycopg2.OperationalError as err:
             print("Error: ", err)
             self.conn.close()

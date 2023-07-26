@@ -14,13 +14,18 @@ import uvicorn
 app = FastAPI()
 conn = UserConnection()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# origins = [
+#     "https://demo-auge.gcisoftware.com"
+#     # Agrega aquí otros dominios que necesites permitir
+# ]
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins="*",
+#     allow_credentials=True,
+#     allow_methods=["GET", "POST", "OPTIONS"],
+#     allow_headers=["*"],
+# )
 
 
 """
@@ -409,9 +414,3 @@ async def analisis_endpoint(list):
         resultado = "Este docuemto se considera autentico"
 
     return resultado
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=443, ssl_keyfile="/home/ssl/1c72091d0684ca66.pem", ssl_certfile="/home/ssl/private_key.key")
-
-
-
